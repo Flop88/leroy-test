@@ -7,15 +7,22 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.InternalTextApi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.input.TextFieldValue
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LeroymerlintestTheme
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LightColorPalette
 
@@ -36,6 +43,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @ExperimentalFoundationApi
 @Composable
 fun BaseScreen() {
@@ -49,8 +57,11 @@ fun BaseScreen() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
+
 @Composable
 fun Toolbar() {
+
     Row(
         modifier = Modifier
             .height(200.dp)
@@ -64,15 +75,43 @@ fun Toolbar() {
                 .height(40.dp)
                 .fillMaxWidth()
         ) {
-            Text("Поиск товаров",
+            Text(
+                "Поиск товаров",
                 modifier = Modifier.weight(1f),
                 color = Color.White,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
         }
+        Row(
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+        ) {
+            TextField(value = "text") {
+
+            }
+        }
     }
 }
+
+@InternalTextApi
+@Composable
+fun SimpleTextInputComponent() {
+
+    Surface(color = Color.LightGray, modifier = Modifier.padding(16.dp)) {
+
+        var textValue by remember { mutableStateOf(TextFieldValue("Enter your text here")) }
+        TextField(value = textValue,
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            // Update value of textValue with the latest value of the text field
+            onValueChange = {
+                textValue = it
+            }
+        )
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
