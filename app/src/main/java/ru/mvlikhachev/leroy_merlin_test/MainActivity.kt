@@ -5,10 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -22,8 +19,7 @@ import androidx.compose.ui.unit.sp
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LeroymerlintestTheme
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LightColorPalette
 
-val brownGreyColor = Color(0xFF959595)
-val backgroundGreen = Color(0xFF29B619)
+val backgroundGreen = Color(0xFF72C154)
 
 class MainActivity : ComponentActivity() {
 
@@ -60,13 +56,21 @@ fun Toolbar() {
             .height(200.dp)
             .fillMaxWidth()
             .background(color = backgroundGreen)
+            .padding(start = 16.dp, end = 24.dp)
     ) {
-        Text("Поиск товаров",
-            modifier = Modifier.weight(1f),
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier
+                .padding(top = 60.dp)
+                .height(40.dp)
+                .fillMaxWidth()
+        ) {
+            Text("Поиск товаров",
+                modifier = Modifier.weight(1f),
+                color = Color.White,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
