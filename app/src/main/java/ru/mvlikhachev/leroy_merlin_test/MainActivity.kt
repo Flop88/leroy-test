@@ -1,28 +1,36 @@
 package ru.mvlikhachev.leroy_merlin_test
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.InternalTextApi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.mvlikhachev.leroy_merlin_test.model.Category
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LeroymerlintestTheme
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LightColorPalette
+import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGray
+import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGreen
 
-val backgroundGreen = Color(0xFF6ED548)
 
 class MainActivity : ComponentActivity() {
 
@@ -59,24 +67,102 @@ fun BaseScreen() {
 
 @Composable
 fun catalogRow() {
-    val categories: List<String> = listOf("Сад", "Освещение", "Инструменты", "Стройматериалы", "Декор")
+    val categories: List<Category> = listOf(
+        Category("Сад", R.drawable.category_garden),
+        Category("Освещение", R.drawable.category_osveshchenie),
+        Category("Инструменты", R.drawable.category_instrumenty),
+        Category("Стройматериалы", R.drawable.category_brick),
+        Category("Декор", R.drawable.category_dekor)
+    )
+
     LazyRow(
         Modifier
             .fillMaxWidth()
             .padding(top = 30.dp)
     ) {
+
+        item { Column( modifier = Modifier
+            .background(backgroundGreen)
+            .width(125.dp)
+            .height(125.dp)
+            .padding(start = 16.dp)
+            .clickable (onClick = { Log.d("clickOnBox", "click") } )
+            .clip(RoundedCornerShape(4.dp))
+        ) {
+            Box(
+                Modifier
+                    .padding(top = 14.dp, start = 14.dp)
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                Text(text = "Каталог", fontSize = 14.sp, color = Color.White)
+            }
+            Box(
+                modifier = Modifier
+                    .absoluteOffset()
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.BottomEnd
+
+            ) {
+                Image(painter = painterResource(id = R.drawable.ic_menu_24),
+                    modifier = Modifier
+                        .width(48.dp)
+                        .height(48.dp)
+                        .padding(end = 8.dp),
+                    contentDescription = null)
+            }
+        } }
         items(categories) { category ->
-            Box(Modifier.width(150.dp).height(150.dp).padding(start = 16.dp).background(Color.Red)) {
+
                 CategoryRow(category = category)
             }
         }
     }
-}
 
 
 @Composable
-fun CategoryRow(category: String) {
-    Text(category)
+fun CategoryRow(category: Category) {
+    Box(
+        Modifier
+            .width(125.dp)
+            .height(125.dp)
+            .padding(start = 16.dp)
+            .clickable (onClick = { Log.d("clickOnBox", "click") } )
+            .clip(RoundedCornerShape(4.dp))
+
+    ) {
+    Column( modifier = Modifier
+        .background(backgroundGray)
+        .width(150.dp)
+        .height(150.dp)
+    ) {
+        Box(
+            Modifier
+                .padding(top = 14.dp, start = 14.dp)
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(end = 8.dp),
+        ) {
+            Text(text = category.categoryName, fontSize = 14.sp)
+        }
+        Box(
+            modifier = Modifier
+                .absoluteOffset()
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.BottomEnd
+
+        ) {
+            Image(painter = painterResource(id = category.categoryImg),
+                modifier = Modifier
+                    .width(64.dp)
+                    .height(64.dp),
+                contentDescription = null)
+        }
+    }
+    }
+
 }
 
 
@@ -116,9 +202,6 @@ fun Toolbar() {
             Box(Modifier.weight(1f)) {
                 QrCodeButton()
             }
-
-
-
         }
     }
 
@@ -157,8 +240,8 @@ fun SearchTextField() {
                     .width(48.dp)
                     .height(48.dp),
                 colors = ButtonDefaults.textButtonColors(
-                backgroundColor = backgroundGreen,
-            ),
+                    backgroundColor = backgroundGreen,
+                ),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_search_24),
