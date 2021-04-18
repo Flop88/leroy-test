@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.mvlikhachev.leroy_merlin_test.model.Category
+import ru.mvlikhachev.leroy_merlin_test.model.Goods
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LeroymerlintestTheme
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LightColorPalette
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGray
@@ -62,10 +65,112 @@ fun BaseScreen() {
                 Toolbar()
             }
             item { catalogRow() }
+            item {
+                Row(
+                    Modifier
+                        .padding(start = 14.dp, top = 64.dp)
+                        .fillMaxWidth()) {
+                    Text(text = "Предложение ограничено", fontWeight = FontWeight.Bold)
+                }
+            }
+            item { limitedOfferRow() }
+            item {
+                Row(
+                    Modifier
+                        .padding(start = 14.dp, top = 64.dp)
+                        .fillMaxWidth()) {
+                    Text(text = "Лучшая цена", fontWeight = FontWeight.Bold)
+                }
+            }
+            item { limitedOfferRow() }
+            item { BottomNav() }
 
         },
         modifier = Modifier.fillMaxSize()
     )
+}
+
+@Composable
+fun BottomNav() {
+
+}
+
+@Composable
+fun limitedOfferRow() {
+    val goods: List<Goods> = listOf(
+        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+    )
+    LazyRow(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 30.dp)
+    ) {
+        items(goods) { it ->
+            Row(Modifier.padding(horizontal = 16.dp)) {
+                goodsRow(goods = it)
+            }
+        }
+    }
+}
+
+@Composable
+fun goodsRow(goods: Goods) {
+    Column(
+        Modifier
+            .width(130.dp)
+            .height(200.dp)
+            .clickable(onClick = { Log.d("clickOnGoods", "click on Goods") })
+            ) {
+        Column(
+            Modifier
+                .height(25.dp)
+                .padding(4.dp)
+                .weight(3f)
+                .fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(id = goods.img),
+                modifier = Modifier.fillMaxSize(),
+                contentDescription = null
+            )
+        }
+        Column(
+            Modifier
+                .height(25.dp)
+                .padding(horizontal = 4.dp)
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = goods.price.toString() + " ₽/шт.",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 6.dp)
+            )
+        }
+        Column(
+            Modifier
+                .height(25.dp)
+                .padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
+                .weight(2f)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = goods.name,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 6.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -77,11 +182,10 @@ fun catalogRow() {
         Category("Стройматериалы", R.drawable.category_brick),
         Category("Декор", R.drawable.category_dekor)
     )
-
-    LazyRow(
-        Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp, start = 16.dp)
+        LazyRow(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp, start = 16.dp)
     ) {
 
         item { CatalogBox() }
@@ -317,11 +421,4 @@ fun SearchTextField() {
         placeholder = { Text(text = "Поиск") },
     )
 
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LeroymerlintestTheme {
-    }
 }
