@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,26 +15,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.InternalTextApi
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.mvlikhachev.leroy_merlin_test.model.Category
 import ru.mvlikhachev.leroy_merlin_test.model.Goods
-import ru.mvlikhachev.leroy_merlin_test.ui.theme.LeroymerlintestTheme
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LightColorPalette
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGray
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGreen
@@ -47,7 +46,6 @@ class MainActivity : ComponentActivity() {
             MaterialTheme(
                 colors = LightColorPalette
             ) {
-                // A surface container using the 'background' color from the theme
                 BaseScreen()
             }
         }
@@ -59,40 +57,55 @@ class MainActivity : ComponentActivity() {
 @ExperimentalFoundationApi
 @Composable
 fun BaseScreen() {
-    LazyColumn(
-        content = {
-            stickyHeader {
-                Toolbar()
-            }
-            item { catalogRow() }
-            item {
-                Row(
-                    Modifier
-                        .padding(start = 14.dp, top = 64.dp)
-                        .fillMaxWidth()) {
-                    Text(text = "Предложение ограничено", fontWeight = FontWeight.Bold)
+        LazyColumn(
+            content = {
+                stickyHeader {
+                    Toolbar()
                 }
-            }
-            item { limitedOfferRow() }
-            item {
-                Row(
-                    Modifier
-                        .padding(start = 14.dp, top = 64.dp)
-                        .fillMaxWidth()) {
-                    Text(text = "Лучшая цена", fontWeight = FontWeight.Bold)
+                item { catalogRow() }
+                item {
+                    Row(
+                        Modifier
+                            .padding(start = 14.dp, top = 64.dp)
+                            .fillMaxWidth()) {
+                        Text(text = "Предложение ограничено", fontWeight = FontWeight.Bold)
+                    }
                 }
-            }
-            item { limitedOfferRow() }
-            item { BottomNav() }
+                item { limitedOfferRow() }
+                item {
+                    Row(
+                        Modifier
+                            .padding(start = 14.dp, top = 64.dp)
+                            .fillMaxWidth()) {
+                        Text(text = "Лучшая цена", fontWeight = FontWeight.Bold)
+                    }
+                }
+                item { limitedOfferRow() }
+                item { BottomNav() }
 
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+
 }
 
 @Composable
 fun BottomNav() {
-
+    BottomNavigation (backgroundColor = Color.White) {
+        IconButton(onClick = { /* doSomething() */ }) {
+            Icon(Icons.Filled.Menu,"")
+        }
+        // The actions should be at the end of the BottomAppBar
+        Spacer(Modifier.weight(1f, true))
+        IconButton(onClick = { /* doSomething() */ }) {
+            Icon(Icons.Filled.Favorite,"")
+        }
+        IconButton(onClick = { /* doSomething() */ }) {
+            Icon(Icons.Filled.Call,"")
+        }
+    }
 }
 
 @Composable
