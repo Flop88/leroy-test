@@ -1,9 +1,7 @@
 package ru.mvlikhachev.leroy_merlin_test
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
@@ -13,12 +11,16 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.InternalTextApi
 import androidx.compose.ui.text.font.FontWeight
@@ -59,7 +61,8 @@ fun BaseScreen() {
             stickyHeader {
                 Toolbar()
             }
-            item { catalogRow()}
+            item { catalogRow() }
+
         },
         modifier = Modifier.fillMaxSize()
     )
@@ -78,20 +81,80 @@ fun catalogRow() {
     LazyRow(
         Modifier
             .fillMaxWidth()
-            .padding(top = 30.dp)
+            .padding(top = 30.dp, start = 16.dp)
     ) {
 
-        item { Column( modifier = Modifier
-            .background(backgroundGreen)
-            .width(125.dp)
-            .height(125.dp)
-            .padding(start = 16.dp)
-            .clickable (onClick = { Log.d("clickOnBox", "click") } )
-            .clip(RoundedCornerShape(4.dp))
+        item { CatalogBox() }
+
+        items(categories) { category ->
+            Row(Modifier.padding(start = 16.dp)) {
+                CategoryBox(category = category)
+            }
+        }
+
+        item { AllButtonBox() }
+    }
+}
+
+@Composable
+fun AllButtonBox() {
+    Row(
+        Modifier
+            .padding(start = 16.dp, end = 16.dp)
+            .clickable(onClick = { Log.d("clickOnBox", "click") })
+    ) {
+        Column(
+            modifier = Modifier
+                .background(backgroundGray)
+                .width(125.dp)
+                .height(125.dp)
+                .padding(start = 16.dp, end = 16.dp)
+                .clip(RoundedCornerShape(4.dp))
+        ) {
+            Box(
+                modifier = Modifier
+                    .absoluteOffset()
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                //Square FAB
+                FloatingActionButton(
+                    onClick = { },
+                    backgroundColor = backgroundGreen,
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                ) {
+                    Icon(Icons.Filled.ArrowForward, "")
+                }
+            }
+            Box(
+                Modifier
+                    .padding(top = 8.dp)
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                Text(text = "Смотреть все", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+@Composable
+fun CatalogBox() {
+    Row(Modifier.clickable(onClick = { Log.d("clickOnBox", "click") })) {
+        Column(
+            modifier = Modifier
+                .background(backgroundGreen)
+                .width(125.dp)
+                .height(125.dp)
+                .padding(start = 16.dp, end = 16.dp)
+                .clip(RoundedCornerShape(4.dp))
         ) {
             Box(
                 Modifier
-                    .padding(top = 14.dp, start = 14.dp)
+                    .padding(top = 14.dp)
                     .weight(1f)
                     .fillMaxWidth()
             ) {
@@ -105,63 +168,60 @@ fun catalogRow() {
                 contentAlignment = Alignment.BottomEnd
 
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_menu_24),
+                Image(
+                    painter = painterResource(id = R.drawable.ic_menu_24),
                     modifier = Modifier
                         .width(48.dp)
                         .height(48.dp)
                         .padding(end = 8.dp),
-                    contentDescription = null)
-            }
-        } }
-        items(categories) { category ->
-
-                CategoryRow(category = category)
+                    contentDescription = null
+                )
             }
         }
     }
+
+}
 
 
 @Composable
-fun CategoryRow(category: Category) {
-    Box(
-        Modifier
-            .width(125.dp)
-            .height(125.dp)
-            .padding(start = 16.dp)
-            .clickable (onClick = { Log.d("clickOnBox", "click") } )
-            .clip(RoundedCornerShape(4.dp))
-
-    ) {
-    Column( modifier = Modifier
-        .background(backgroundGray)
-        .width(150.dp)
-        .height(150.dp)
-    ) {
-        Box(
-            Modifier
-                .padding(top = 14.dp, start = 14.dp)
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(end = 8.dp),
-        ) {
-            Text(text = category.categoryName, fontSize = 14.sp)
-        }
-        Box(
+fun CategoryBox(category: Category) {
+    Row(Modifier.clickable(onClick = { Log.d("clickOnBox", "click") })) {
+        Column(
             modifier = Modifier
-                .absoluteOffset()
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.BottomEnd
-
+                .background(backgroundGray)
+                .width(125.dp)
+                .height(125.dp)
+                .padding(start = 16.dp, end = 16.dp)
+                .clip(RoundedCornerShape(4.dp))
         ) {
-            Image(painter = painterResource(id = category.categoryImg),
+            Box(
+                Modifier
+                    .padding(top = 14.dp)
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                Text(text = category.categoryName, fontSize = 14.sp)
+            }
+            Box(
                 modifier = Modifier
-                    .width(64.dp)
-                    .height(64.dp),
-                contentDescription = null)
+                    .absoluteOffset()
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.BottomEnd
+
+            ) {
+                Image(
+                    painter = painterResource(id = category.categoryImg),
+                    modifier = Modifier
+                        .width(48.dp)
+                        .height(48.dp)
+                        .padding(end = 8.dp),
+                    contentDescription = null
+                )
+            }
         }
     }
-    }
+
 
 }
 
@@ -209,7 +269,8 @@ fun Toolbar() {
 
 @Composable
 fun QrCodeButton() {
-    Button(onClick = { /* Do something! */ },
+    Button(
+        onClick = { /* Do something! */ },
         Modifier
             .padding(start = 16.dp)
             .width(56.dp)
@@ -235,7 +296,8 @@ fun SearchTextField() {
             backgroundColor = Color.White
         ),
         trailingIcon = {
-            Button(onClick = { /* Do something! */ },
+            Button(
+                onClick = { /* Do something! */ },
                 Modifier
                     .width(48.dp)
                     .height(48.dp),
