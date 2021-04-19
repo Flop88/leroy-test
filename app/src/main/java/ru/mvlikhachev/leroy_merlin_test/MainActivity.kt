@@ -16,9 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.mvlikhachev.leroy_merlin_test.model.Category
 import ru.mvlikhachev.leroy_merlin_test.model.Goods
+import ru.mvlikhachev.leroy_merlin_test.model.Screen
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.LightColorPalette
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGray
 import ru.mvlikhachev.leroy_merlin_test.ui.theme.backgroundGreen
@@ -52,71 +50,115 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @InternalTextApi
 @ExperimentalFoundationApi
 @Composable
 fun BaseScreen() {
-        LazyColumn(
-            content = {
-                stickyHeader {
-                    Toolbar()
-                }
-                item { catalogRow() }
-                item {
-                    Row(
-                        Modifier
-                            .padding(start = 14.dp, top = 64.dp)
-                            .fillMaxWidth()) {
-                        Text(text = "Предложение ограничено", fontWeight = FontWeight.Bold)
-                    }
-                }
-                item { limitedOfferRow() }
-                item {
-                    Row(
-                        Modifier
-                            .padding(start = 14.dp, top = 64.dp)
-                            .fillMaxWidth()) {
-                        Text(text = "Лучшая цена", fontWeight = FontWeight.Bold)
-                    }
-                }
-                item { limitedOfferRow() }
-                item { BottomNav() }
-
-
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-
+    Scaffold(
+        topBar = { Toolbar() },
+        content = { Content() },
+        bottomBar = { BottomNav() }
+    )
 }
 
 @Composable
 fun BottomNav() {
-    BottomNavigation (backgroundColor = Color.White) {
-        IconButton(onClick = { /* doSomething() */ }) {
-            Icon(Icons.Filled.Menu,"")
-        }
-        // The actions should be at the end of the BottomAppBar
-        Spacer(Modifier.weight(1f, true))
-        IconButton(onClick = { /* doSomething() */ }) {
-            Icon(Icons.Filled.Favorite,"")
-        }
-        IconButton(onClick = { /* doSomething() */ }) {
-            Icon(Icons.Filled.Call,"")
+
+    val screens: List<Screen> = listOf(
+        Screen("Главная", R.drawable.ic_search_24),
+        Screen("Список", R.drawable.ic_list_24),
+        Screen("Магазин", R.drawable.ic_shopping_24),
+        Screen("Профиль", R.drawable.ic_person_24),
+        Screen("Корзина", R.drawable.ic_cart_24)
+    )
+
+    BottomNavigation(
+        backgroundColor = Color.White,
+    ) {
+        screens.forEach {
+            BottomNavigationItem(
+                icon = {
+                    Icon(
+                        painter = painterResource(id = it.icon),
+                        tint = Color.DarkGray,
+                        contentDescription = null, // decorative element
+                    )
+                },
+                label = { Text(text = it.label, color = Color.DarkGray, fontSize = 12.sp) },
+                onClick = {
+                    Log.d("clickBottomNavigation", "Clicked on: ${it.label}")
+                },
+                selected = true
+            )
         }
     }
 }
 
+@InternalTextApi
+@ExperimentalFoundationApi
 @Composable
-fun limitedOfferRow() {
+fun Content() {
+    LazyColumn(
+        content = {
+            item { CatalogRow() }
+            item {
+                Row(
+                    Modifier
+                        .padding(start = 14.dp, top = 64.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(text = "Предложение ограничено", fontWeight = FontWeight.Bold)
+                }
+            }
+            item { LimitedOfferRow() }
+            item {
+                Row(
+                    Modifier
+                        .padding(start = 14.dp, top = 64.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(text = "Лучшая цена", fontWeight = FontWeight.Bold)
+                }
+            }
+            item { LimitedOfferRow() }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun LimitedOfferRow() {
     val goods: List<Goods> = listOf(
-        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
-        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
-        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
-        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
-        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
-        Goods("Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг", 337.00, R.drawable.goods_shtukaturka),
+        Goods(
+            "Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг",
+            337.00,
+            R.drawable.goods_shtukaturka
+        ),
+        Goods(
+            "Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг",
+            337.00,
+            R.drawable.goods_shtukaturka
+        ),
+        Goods(
+            "Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг",
+            337.00,
+            R.drawable.goods_shtukaturka
+        ),
+        Goods(
+            "Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг",
+            337.00,
+            R.drawable.goods_shtukaturka
+        ),
+        Goods(
+            "Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг",
+            337.00,
+            R.drawable.goods_shtukaturka
+        ),
+        Goods(
+            "Штукатурка механизированная гипсовая Knauf МП 75 Мастер 30 кг",
+            337.00,
+            R.drawable.goods_shtukaturka
+        ),
     )
     LazyRow(
         Modifier
@@ -125,20 +167,20 @@ fun limitedOfferRow() {
     ) {
         items(goods) { it ->
             Row(Modifier.padding(horizontal = 16.dp)) {
-                goodsRow(goods = it)
+                GoodsRow(goods = it)
             }
         }
     }
 }
 
 @Composable
-fun goodsRow(goods: Goods) {
+fun GoodsRow(goods: Goods) {
     Column(
         Modifier
             .width(130.dp)
             .height(200.dp)
             .clickable(onClick = { Log.d("clickOnGoods", "click on Goods") })
-            ) {
+    ) {
         Column(
             Modifier
                 .height(25.dp)
@@ -187,7 +229,7 @@ fun goodsRow(goods: Goods) {
 }
 
 @Composable
-fun catalogRow() {
+fun CatalogRow() {
     val categories: List<Category> = listOf(
         Category("Сад", R.drawable.category_garden),
         Category("Освещение", R.drawable.category_osveshchenie),
@@ -195,10 +237,10 @@ fun catalogRow() {
         Category("Стройматериалы", R.drawable.category_brick),
         Category("Декор", R.drawable.category_dekor)
     )
-        LazyRow(
-            Modifier
-                .fillMaxWidth()
-                .padding(top = 30.dp, start = 16.dp)
+    LazyRow(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 30.dp, start = 16.dp)
     ) {
 
         item { CatalogBox() }
@@ -433,5 +475,4 @@ fun SearchTextField() {
         onValueChange = { text = it },
         placeholder = { Text(text = "Поиск") },
     )
-
 }
